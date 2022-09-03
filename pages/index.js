@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Feed from "../components/Feed";
 import Sidebar from "../components/Sidebar";
+import Widgets from "../components/Widgets";
 
 export default function Home() {
   return (
@@ -14,10 +15,12 @@ export default function Home() {
       <main className="flex min-h-screen mx-auto ">
         {/* Sidebar */}
         <Sidebar />
+
         {/* Feed */}
         <Feed />
 
         {/* Widgets */}
+        <Widgets />
 
         {/* Modal */}
       </main>

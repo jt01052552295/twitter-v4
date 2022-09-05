@@ -28,7 +28,7 @@ export default function Input() {
     const docRef = await addDoc(collection(db, "posts"), {
       id: "uid",
       text: input,
-      userImg: "https://picsum.photos/500",
+      userImg: "https://picsum.photos/50",
       timestamp: serverTimestamp(),
       name: "홍길동",
       username: "김길동",

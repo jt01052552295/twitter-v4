@@ -9,6 +9,7 @@ const nextConfig = {
       "cdn.cnn.com",
       "media.cnn.com",
       "randomuser.me",
+      "firebasestorage.googleapis.com",
     ],
   },
   swcMinify: true,

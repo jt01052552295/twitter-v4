@@ -1,4 +1,8 @@
-import React from "react";
+import { db, storage } from "../firebase";
+import { useState, useEffect } from "react";
+import { deleteObject, ref } from "firebase/storage";
+import { useRouter } from "next/router";
+import Moment from "react-moment";
 import Image from "next/image";
 import {
   EllipsisHorizontalIcon,
@@ -11,7 +15,11 @@ import {
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/24/solid";
 
 export default function Post({ post, id }) {
-  //   console.log(post);
+  const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [hasLiked, setHasLiked] = useState(false);
+  const router = useRouter();
+  console.log(post.data().timestamp.toDate());
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
@@ -21,7 +29,7 @@ export default function Post({ post, id }) {
           className="rounded-full "
           width="50"
           height="50"
-          src={post?.userImg}
+          src={post?.data()?.userImg}
           alt="user-img"
         />
       </div>
@@ -33,11 +41,11 @@ export default function Post({ post, id }) {
           {/* post user info */}
           <div className="flex items-center space-x-1 whitespace-nowrap">
             <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-              {post?.name}
+              {post?.data()?.name}
             </h4>
             <span className="text-sm sm:text-[15px]">@{post?.username} - </span>
             <span className="text-sm sm:text-[15px] hover:underline">
-              <>{post?.timestamp}</>
+              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
             </span>
           </div>
           {/* dot icon */}
@@ -46,13 +54,13 @@ export default function Post({ post, id }) {
 
         {/* post text */}
         <p className="text-gray-800 text-[15px sm:text-[16px] mb-2">
-          {post?.text}
+          {post?.data()?.text}
         </p>
 
         {/* post image */}
 
         <Image
-          src={post?.img}
+          src={post?.data()?.image}
           className="rounded-2xl -mr2"
           width="100%"
           height="100%"

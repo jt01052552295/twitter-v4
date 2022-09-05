@@ -1,4 +1,12 @@
 import { db, storage } from "../firebase";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+
 import { useState, useEffect } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { useRouter } from "next/router";
@@ -19,7 +27,17 @@ export default function Post({ post, id }) {
   const [comments, setComments] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const router = useRouter();
-  console.log(post.data().timestamp.toDate());
+
+  async function deletePost() {
+    if (window.confirm("Are you sure you want to delete this post?" + id)) {
+      deleteDoc(doc(db, "posts", id));
+      if (post.data().image) {
+        deleteObject(ref(storage, `posts/${id}/image`));
+      }
+      router.push("/");
+    }
+  }
+
   return (
     <div className="flex p-3 cursor-pointer border-b border-gray-200">
       {/* user image */}
@@ -75,7 +93,10 @@ export default function Post({ post, id }) {
             <ChatBubbleOvalLeftEllipsisIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
             <span className="text-sm">99</span>
           </div>
-          <TrashIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />
+          <TrashIcon
+            onClick={deletePost}
+            className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+          />
           <div className="flex items-center">
             <HeartIconFilled className="h-9 w-9 hoverEffect p-2 text-red-600 hover:bg-red-100" />
             <HeartIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />

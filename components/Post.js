@@ -10,7 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { deleteObject, ref } from "firebase/storage";
 import { useRouter } from "next/router";
-import Moment from "react-moment";
+// import Moment from "react-moment";
 import Image from "next/image";
 import {
   EllipsisHorizontalIcon,
@@ -21,11 +21,15 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconFilled } from "@heroicons/react/24/solid";
+import { useRecoilState } from "recoil";
+import { modalState, postIdState } from "../atom/modalAtom";
 
 export default function Post({ post, id }) {
   const [likes, setLikes] = useState([]);
   const [comments, setComments] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
+  const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
   const router = useRouter();
 
   async function likePost() {
@@ -77,9 +81,7 @@ export default function Post({ post, id }) {
               {post?.data()?.name}
             </h4>
             <span className="text-sm sm:text-[15px]">@{post?.username} - </span>
-            <span className="text-sm sm:text-[15px] hover:underline">
-              <Moment fromNow>{post?.data()?.timestamp?.toDate()}</Moment>
-            </span>
+            <span className="text-sm sm:text-[15px] hover:underline">-</span>
           </div>
           {/* dot icon */}
           <EllipsisHorizontalIcon className="h-10 hoverEffect w-10 hover:bg-sky-100 hover:text-sky-500 p-2 " />
@@ -106,7 +108,13 @@ export default function Post({ post, id }) {
         {/* icons */}
         <div className="flex justify-between text-gray-500 p-2">
           <div className="flex items-center select-none">
-            <ChatBubbleOvalLeftEllipsisIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
+            <ChatBubbleOvalLeftEllipsisIcon
+              onClick={() => {
+                setPostId(id);
+                setOpen(!open);
+              }}
+              className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100"
+            />
             <span className="text-sm">99</span>
           </div>
           <TrashIcon

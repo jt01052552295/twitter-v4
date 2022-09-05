@@ -28,6 +28,21 @@ export default function Post({ post, id }) {
   const [hasLiked, setHasLiked] = useState(false);
   const router = useRouter();
 
+  async function likePost() {
+    // if (currentUser) {
+    if (hasLiked) {
+      await deleteDoc(doc(db, "posts", id, "likes", "uid"));
+    } else {
+      await setDoc(doc(db, "posts", id, "likes", "uid"), {
+        username: "좋아요",
+      });
+    }
+    // } else {
+    //   // signIn();
+    //   router.push("/auth/signin");
+    // }
+  }
+
   async function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?" + id)) {
       deleteDoc(doc(db, "posts", id));
@@ -79,6 +94,7 @@ export default function Post({ post, id }) {
 
         <Image
           src={post?.data()?.image}
+          onClick={() => router.push(`/posts/${id}`)}
           className="rounded-2xl -mr2"
           width="100%"
           height="100%"
@@ -98,8 +114,17 @@ export default function Post({ post, id }) {
             className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
           />
           <div className="flex items-center">
-            <HeartIconFilled className="h-9 w-9 hoverEffect p-2 text-red-600 hover:bg-red-100" />
-            <HeartIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />
+            {hasLiked ? (
+              <HeartIconFilled
+                onClick={likePost}
+                className="h-9 w-9 hoverEffect p-2 text-red-600 hover:bg-red-100"
+              />
+            ) : (
+              <HeartIcon
+                onClick={likePost}
+                className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+              />
+            )}
             <span className={` text-red-600 text-sm select-none`}> 19</span>
           </div>
           <ShareIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />

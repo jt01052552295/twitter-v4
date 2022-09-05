@@ -4,27 +4,8 @@ import Post from "./Post";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
+import { AnimatePresence, motion } from "framer-motion";
 
-// const posts = [
-//   {
-//     id: "1",
-//     name: "test",
-//     username: "tttttt",
-//     userImg: "https://picsum.photos/50",
-//     img: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-//     text: "nice view",
-//     timestamp: "2 hours ago",
-//   },
-//   {
-//     id: "2",
-//     name: "test",
-//     username: "tttttt",
-//     userImg: "https://picsum.photos/50",
-//     img: "https://images.unsplash.com/photo-1657664042482-a6e53c1b03a1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxzZWFyY2h8MXx8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
-//     text: "wow!",
-//     timestamp: "2 days ago",
-//   },
-// ];
 export default function Feed() {
   const [posts, setPosts] = useState([]);
 
@@ -49,9 +30,19 @@ export default function Feed() {
       </div>
       <Input />
 
-      {posts.map((post) => (
-        <Post key={post.id} id={post.id} post={post} />
-      ))}
+      <AnimatePresence>
+        {posts.map((post) => (
+          <motion.div
+            key={post.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <Post key={post.id} id={post.id} post={post} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
